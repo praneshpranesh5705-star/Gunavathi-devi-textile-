@@ -1,4 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html{scroll-behavior:smooth}body{margin:0;background:#fffaf3;color:#2d1720}::selection{background:#9B1C31;color:white}
+:root{--brand:#9B1C31;--deep:#2d1720;--gold:#d8ad58;--cream:#fffaf3}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--deep);font-family:Arial,Helvetica,sans-serif}
+::selection{background:var(--brand);color:#fff}
+.font-serif{font-family:Georgia,"Times New Roman",serif}
+.text-brand{color:var(--brand)}.bg-brand{background:var(--brand)}.text-deep{color:var(--deep)}.bg-deep{background:var(--deep)}.text-gold{color:var(--gold)}.bg-gold{background:var(--gold)}.bg-cream{background:var(--cream)}
+.zari-frame{border:1px solid rgba(216,173,88,.45);background:linear-gradient(135deg,rgba(216,173,88,.08),rgba(255,255,255,.03))}
+.reveal{animation:rise .8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+button,a,input{transition:all .2s ease}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
