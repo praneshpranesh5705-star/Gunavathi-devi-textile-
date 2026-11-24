@@ -151,12 +151,14 @@ supabase/schema.sql          the SQL you run once
 ### Any Node host
 
 ```bash
-npm ci
+npm install
 npm run build
 npm start          # serves on port 3000
 ```
 
 Set the two environment variables in the host's dashboard. The app needs Node 18.18 or newer.
+
+> `package-lock.json` is not committed. The first `npm install` generates it — commit it afterwards if you want pinned dependency versions across machines and deploys.
 
 ---
 
