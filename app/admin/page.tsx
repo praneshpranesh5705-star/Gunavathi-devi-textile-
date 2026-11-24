@@ -1,20 +1,75 @@
-"use client";
-import {useEffect,useRef,useState} from "react";
-import {ArrowLeft,Upload,ImagePlus,LockKeyhole,RotateCcw} from "lucide-react";
-const key="gunavathi-products";
-const defaults=[
-{name:"Custom Name Tape",price:"₹120",unit:"per roll",description:"Woven name tape with custom text, colour and size for uniforms, garments and identification.",image:"https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=900&q=85"},
-{name:"Name Rope",price:"₹250",unit:"per bundle",description:"Custom woven name rope and textile cord for schools, garments, bags and bulk requirements.",image:"https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=85"},
-{name:"Design Tape",price:"₹180",unit:"per roll",description:"Decorative woven design tape with custom colours, borders, motifs and repeat patterns.",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"},
-{name:"Custom Textile Label",price:"₹300",unit:"per order",description:"Made-to-order textile labels and identification products for businesses and institutions.",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85"}];
-export default function Admin(){
- const [ok,setOk]=useState(false),[pass,setPass]=useState(""),[products,setProducts]=useState(defaults),[selected,setSelected]=useState<number|null>(null),[message,setMessage]=useState("");
- const input=useRef<HTMLInputElement>(null);
- useEffect(()=>{try{const s=localStorage.getItem(key);if(s)setProducts(JSON.parse(s))}catch{}},[]);
- const login=()=>pass==="gunavathi123"?setOk(true):setMessage("Incorrect admin password.");
- const save=(next:any[])=>{setProducts(next);localStorage.setItem(key,JSON.stringify(next));setMessage("Product details saved successfully.");};
- const choose=(i:number)=>{setSelected(i);input.current?.click()};
- const upload=(file:File)=>{if(selected===null)return;if(!file.type.startsWith("image/"))return setMessage("Please select an image file.");if(file.size>2*1024*1024)return setMessage("Please use an image below 2 MB.");const r=new FileReader();r.onload=()=>{const next=[...products];next[selected]={...next[selected],image:String(r.result)};save(next)};r.readAsDataURL(file)};
- if(!ok)return <main className="min-h-screen bg-cream grid place-items-center px-5"><div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-black/5"><div className="w-14 h-14 rounded-full bg-brand text-white grid place-items-center mx-auto"><LockKeyhole/></div><h1 className="font-serif text-3xl text-center mt-5">Gunavathi Tex Admin</h1><p className="text-center text-black/50 mt-2">Manage name tape, name rope, design tape and textile products</p><input type="password" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} placeholder="Admin password" className="w-full mt-7 border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand"/>{message&&<p className="text-red-600 text-sm mt-3">{message}</p>}<button onClick={login} className="w-full mt-4 bg-brand text-white rounded-xl py-3 font-bold">Enter Admin Panel</button><a href="/" className="block text-center mt-5 text-brand text-sm">← Back to website</a></div></main>;
- return <main className="min-h-screen bg-cream"><header className="bg-deep text-white"><div className="max-w-6xl mx-auto px-5 py-5 flex justify-between items-center"><div><p className="text-gold text-xs tracking-[.2em] uppercase">Gunavathi Tex</p><h1 className="font-serif text-2xl">Textile Admin Panel</h1></div><a href="/" className="flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 text-sm"><ArrowLeft size={16}/> Website</a></div></header><div className="max-w-6xl mx-auto px-5 py-10"><div className="bg-white rounded-2xl p-5 mb-7 border border-black/5"><h2 className="font-serif text-2xl">Manage Name Tape • Name Rope • Design Tape</h2><p className="text-sm text-black/55 mt-1">Edit names, prices, units and descriptions, or upload product photos. Changes update this browser immediately.</p></div>{message&&<div className="mb-5 bg-green-50 text-green-800 rounded-xl p-4 text-sm">{message}</div>}<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">{products.map((p,i)=><article key={p.name} className="bg-white rounded-2xl overflow-hidden border border-black/5 shadow-sm"><div className="relative"><img src={p.image} alt={p.name} className="w-full h-64 object-cover"/><button onClick={()=>choose(i)} className="absolute bottom-3 right-3 bg-brand text-white rounded-full p-3 shadow-lg" title="Upload image"><Upload size={18}/></button></div><div className="p-5"><input value={p.name} onChange={e=>setProducts(products.map((x,j)=>j===i?{...x,name:e.target.value}:x))} className="w-full border rounded-lg px-3 py-2 font-serif text-lg"/><div className="grid grid-cols-2 gap-2 mt-2"><input value={p.price} onChange={e=>setProducts(products.map((x,j)=>j===i?{...x,price:e.target.value}:x))} placeholder="Price" className="border rounded-lg px-3 py-2"/><input value={p.unit||""} onChange={e=>setProducts(products.map((x,j)=>j===i?{...x,unit:e.target.value}:x))} placeholder="Unit" className="border rounded-lg px-3 py-2"/></div><textarea value={p.description||""} onChange={e=>setProducts(products.map((x,j)=>j===i?{...x,description:e.target.value}:x))} placeholder="Product description" className="w-full border rounded-lg px-3 py-2 mt-2 min-h-24 text-sm"/><button onClick={()=>save(products)} className="mt-4 w-full bg-brand text-white rounded-xl py-2.5 font-semibold">Save Product Details</button><button onClick={()=>choose(i)} className="mt-2 w-full border border-brand text-brand rounded-xl py-2.5 font-semibold flex justify-center items-center gap-2"><ImagePlus size={17}/> Upload / Replace Image</button><button onClick={()=>save(products.map((x,j)=>j===i?{...x,image:defaults[i].image}:x))} className="mt-2 w-full text-sm text-black/50 hover:text-brand flex justify-center items-center gap-1"><RotateCcw size={14}/> Restore default</button></div></article>)}</div><input ref={input} type="file" accept="image/*" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)upload(f);e.currentTarget.value=""}}/><p className="text-xs text-black/45 mt-8">Maximum image size: 2 MB. Product edits and uploaded images are stored in this browser using local storage.</p></div></main>
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { ArrowLeft, LogOut } from "lucide-react";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import SetupNotice from "@/components/SetupNotice";
+import { listAllProducts } from "@/lib/products";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { signOutAction } from "@/app/admin/actions";
+
+export const metadata: Metadata = {
+  title: "Admin panel",
+  robots: { index: false, follow: false },
+};
+
+// Always read the live catalogue — never serve a cached admin view.
+export const dynamic = "force-dynamic";
+
+/**
+ * The admin dashboard.
+ *
+ * Gated twice: the middleware redirects anyone without a session before this
+ * renders, and this page checks again. The second check is not redundant —
+ * middleware can be bypassed in some deployment setups, and a page that
+ * assumes it ran is a page that leaks drafts.
+ */
+export default async function AdminPage() {
+  if (!isSupabaseConfigured()) {
+    return (
+      <main className="min-h-screen bg-cream">
+        <SetupNotice />
+      </main>
+    );
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = (await supabase!.auth.getUser()) ?? { data: { user: null } };
+
+  if (!user) redirect("/admin/login");
+
+  const products = await listAllProducts();
+
+  return (
+    <main className="min-h-screen bg-cream">
+      <header className="bg-deep text-white">
+        <div className="max-w-6xl mx-auto px-5 py-5 flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <p className="text-gold text-xs tracking-[.2em] uppercase">Gunavathi Tex</p>
+            <h1 className="font-serif text-2xl">Textile Admin Panel</h1>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="/"
+              className="flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 text-sm hover:bg-white/10"
+            >
+              <ArrowLeft size={16} /> Website
+            </a>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className="flex items-center gap-2 border border-white/20 rounded-full px-4 py-2 text-sm hover:bg-white/10"
+              >
+                <LogOut size={16} /> Sign out
+              </button>
+            </form>
+          </div>
+        </div>
+      </header>
+
+      <AdminDashboard products={products} email={user.email ?? "owner"} />
+    </main>
+  );
 }
