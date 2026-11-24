@@ -1,4 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html{scroll-behavior:smooth}body{margin:0;background:#fffaf3;color:#2d1720}::selection{background:#9B1C31;color:white}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #fffaf3;
+  color: #2d1720;
+}
+
+::selection {
+  background: #9b1c31;
+  color: white;
+}
+
+/*
+ * Accessibility: the original design used text-black/45 and /50 for small
+ * captions, which measures around 3.4-4.0:1 against the cream background —
+ * below the 4.5:1 WCAG AA threshold for body text. These two utility classes
+ * replace those values with a tone that passes while staying visually quiet.
+ *
+ *   .muted      -> #5c4a52 on #fffaf3  = 7.1:1  (was text-black/50)
+ *   .muted-soft -> #6b5a61 on #fffaf3  = 5.9:1  (was text-black/45)
+ */
+.muted {
+  color: #5c4a52;
+}
+
+.muted-soft {
+  color: #6b5a61;
+}
+
+/* On the dark maroon panels, white/60 was also below threshold. */
+.muted-on-dark {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Visible keyboard focus everywhere, including the custom buttons. */
+:focus-visible {
+  outline: 2px solid #9b1c31;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect a user's reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
