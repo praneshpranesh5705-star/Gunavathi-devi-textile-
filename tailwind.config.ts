@@ -1,1 +1,21 @@
-import type {Config} from "tailwindcss"; const config:Config={content:["./app/**/*.{js,ts,jsx,tsx,mdx}"],theme:{extend:{colors:{brand:"#9B1C31",deep:"#5B1020",gold:"#D7A83E",cream:"#FFF9F0"},fontFamily:{serif:["Georgia","serif"]}}},plugins:[]}; export default config;
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
+  theme: {
+    extend: {
+      colors: {
+        brand: "#9B1C31",
+        deep: "#5B1020",
+        gold: "#D7A83E",
+        cream: "#FFF9F0",
+      },
+      fontFamily: {
+        serif: ["Georgia", "serif"],
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
